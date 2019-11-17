@@ -6,6 +6,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_LIST_FRAGMENT = "TAG_LIST_FRAGMENT";
@@ -24,12 +29,20 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction ft = fm.beginTransaction();
 
             mEarthquakeListFragment = new EarthquakeListFragment();
-            ft.add(R.id.main_activity_frame, mEarthquakeListFragment, TAG_LIST_FRAGMENT);
 
+            ft.add(R.id.main_activity_frame, mEarthquakeListFragment, TAG_LIST_FRAGMENT);
             ft.commitNow();
         } else{
             mEarthquakeListFragment =
                     (EarthquakeListFragment)fm.findFragmentByTag(TAG_LIST_FRAGMENT);
         }
+
+        Date now = Calendar.getInstance().getTime();
+        List<Earthquake> dummyQuakes = new ArrayList<Earthquake>(0);
+        dummyQuakes.add(new Earthquake("0", now, "San Jose", null, 7.3, null));
+        dummyQuakes.add(new Earthquake("1", now, "LA", null, 6.5, null));
+        dummyQuakes.add(new Earthquake("2", now, "Nepal", null, 6.0, null));
+
+        mEarthquakeListFragment.setEarthquakes(dummyQuakes);
     }
 }

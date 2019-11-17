@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,5 +47,15 @@ public class EarthquakeListFragment extends Fragment {
     }
 
 
-    
+    // An earthquake method that takes a list of Earthquakes, checks for duplicates, and then adds
+    // each new Earthquake to the Array list. It should also notify the Recycler View Adapter that
+    // a new item has been inserted
+    public void setEarthquakes(List<Earthquake>earthquakes){
+        for(Earthquake earthquake: earthquakes){
+            if(!mEarthquakes.contains(earthquake)){
+                mEarthquakes.add(earthquake);
+                mEarthquakeAdapter.notifyItemInserted(mEarthquakes.indexOf(earthquake));
+            }
+        }
+    }
 }

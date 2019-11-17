@@ -25,5 +25,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    implementation 'com.android.support:recyclerview-v7:27.1.1'
+    //implementation 'com.android.support:recyclerview-v7:27.1.1' // this could not work because the auto import
+    // feature in android was importing the androidx dependency. This created a conflict, that's why i also
+    // changed it in the fragment_earthquake_list.xml
+
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }
