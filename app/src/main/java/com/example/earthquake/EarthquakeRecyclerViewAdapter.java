@@ -1,18 +1,23 @@
 package com.example.earthquake;
 
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class EarthquakeRecyclerViewAdapter extends RecyclerView.Adapter<EarthquakeRecyclerViewAdapter.ViewHolder> {
 
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.US);
+    private static final NumberFormat MAGNITUDE_FORMAT = new DecimalFormat("0.0");
     private final List<Earthquake> mEarthquakes;
 
 
@@ -29,8 +34,10 @@ public class EarthquakeRecyclerViewAdapter extends RecyclerView.Adapter<Earthqua
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.earthquake = mEarthquakes.get(position);
-        holder.detailsView.setText (mEarthquakes.get(position).toString());
+        Earthquake earthquake = mEarthquakes.get(position);
+        holder.date.setText(TIME_FORMAT.format(earthquake.getDate()));
+        holder.details.setText(earthquake.getDetails());
+        holder.magnitude.setText(MAGNITUDE_FORMAT.format(earthquake.getMagnitude()));
     }
 
     @Override
@@ -38,20 +45,22 @@ public class EarthquakeRecyclerViewAdapter extends RecyclerView.Adapter<Earthqua
         return mEarthquakes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public final View parentView;
-        public final TextView detailsView;
+        public final TextView date;
+        public final TextView details;
+        public final TextView magnitude;
         public Earthquake earthquake;
 
-        public ViewHolder(View view){
+
+        public ViewHolder(View view) {
             super(view);
             parentView = view;
-            detailsView = (TextView)view.findViewById(R.id.list_item_earthquake_details);
+            date = (TextView) view.findViewById(R.id.date);
+            details = (TextView) view.findViewById(R.id.details);
+            magnitude = (TextView) view.findViewById(R.id.magnitude);
         }
 
-        @Override
-        public String toString() {
-            return super.toString() + " '" + detailsView.getText() + "'";
-        }
+
     }
 }
