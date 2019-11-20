@@ -14,30 +14,34 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class EarthquakeRecyclerViewAdapter extends RecyclerView.Adapter<EarthquakeRecyclerViewAdapter.ViewHolder> {
+public class EarthquakeRecyclerViewAdapter extends
+        RecyclerView.Adapter<EarthquakeRecyclerViewAdapter.ViewHolder> {
 
-    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm", Locale.US);
-    private static final NumberFormat MAGNITUDE_FORMAT = new DecimalFormat("0.0");
+    private static final SimpleDateFormat TIME_FORMAT =
+            new SimpleDateFormat("HH:mm", Locale.US);
+    private static final NumberFormat MAGNITUDE_FORMAT =
+            new DecimalFormat("0.0");
     private final List<Earthquake> mEarthquakes;
-
 
     public EarthquakeRecyclerViewAdapter(List<Earthquake> earthquakes) {
         mEarthquakes = earthquakes;
     }
 
-
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_earthquake, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.list_item_earthquake,
+                        parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Earthquake earthquake = mEarthquakes.get(position);
         holder.date.setText(TIME_FORMAT.format(earthquake.getDate()));
         holder.details.setText(earthquake.getDetails());
-        holder.magnitude.setText(MAGNITUDE_FORMAT.format(earthquake.getMagnitude()));
+        holder.magnitude.setText(
+                MAGNITUDE_FORMAT.format(earthquake.getMagnitude()));
     }
 
     @Override
@@ -45,22 +49,21 @@ public class EarthquakeRecyclerViewAdapter extends RecyclerView.Adapter<Earthqua
         return mEarthquakes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View parentView;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView date;
         public final TextView details;
         public final TextView magnitude;
-        public Earthquake earthquake;
-
 
         public ViewHolder(View view) {
             super(view);
-            parentView = view;
             date = (TextView) view.findViewById(R.id.date);
             details = (TextView) view.findViewById(R.id.details);
             magnitude = (TextView) view.findViewById(R.id.magnitude);
         }
 
-
+        @Override
+        public String toString() {
+            return super.toString() + " '" + details.getText() + "'";
+        }
     }
 }
