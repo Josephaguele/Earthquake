@@ -125,7 +125,7 @@ public class EarthquakeViewModel extends AndroidViewModel {
                                 l.setLatitude(Double.parseDouble(location[0]));
                                 l.setLongitude(Double.parseDouble(location[1]));
 
-                                String magnitudeString = details.split("")[1];
+                                String magnitudeString = details.split(" ")[1];
                                 int end = magnitudeString.length()-1;
                                 double magnitude = Double.parseDouble(magnitudeString.substring(0, end));
 

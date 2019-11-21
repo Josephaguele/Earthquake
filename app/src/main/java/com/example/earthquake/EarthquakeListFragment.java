@@ -16,9 +16,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 public class EarthquakeListFragment extends Fragment {
 
+    private SwipeRefreshLayout mSwipeToRefreshView;
     protected  EarthquakeViewModel earthquakeViewModel;
     private RecyclerView mRecyclerView;
     private ArrayList<Earthquake> mEarthquakes = new ArrayList<Earthquake>();
@@ -36,6 +38,7 @@ public class EarthquakeListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_earthquake_list, container, false);
 
         mRecyclerView = (RecyclerView)view.findViewById(R.id.list);
+        mSwipeToRefreshView = view.findViewById(R.id.swiperefresh);
         return view;
     }
 
@@ -43,15 +46,10 @@ public class EarthquakeListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Set the Recycler View adapter
-        Context context = view.getContext();
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.setAdapter(mEarthquakeAdapter);
-
         // Retrieve the Earthquake View Model for the parent Activity.
         earthquakeViewModel = ViewModelProviders.of(getActivity()).get(EarthquakeViewModel.class);
 
-        //Get teh data from the View Model, and observe any changes.
+        //Get the data from the View Model, and observe any changes.
         earthquakeViewModel.getEarthquakes().observe(this, new Observer<List<Earthquake>>() {
             @Override
             public void onChanged(List<Earthquake> earthquakes) {
@@ -59,6 +57,20 @@ public class EarthquakeListFragment extends Fragment {
                 if (earthquakes != null){
                     setEarthquakes(earthquakes);
                 }
+            }
+        });
+
+        // Set the Recycler View adapter
+        Context context = view.getContext();
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRecyclerView.setAdapter(mEarthquakeAdapter);
+
+
+        // Set up the Swipe to Refresh view
+        mSwipeToRefreshView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateEarthquakes();
             }
         });
     }
@@ -74,5 +86,36 @@ public class EarthquakeListFragment extends Fragment {
                 mEarthquakeAdapter.notifyItemInserted(mEarthquakes.indexOf(earthquake));
             }
         }
+        // This method disables the "refreshing" visual indicator when an update has been received.
+        // This is because the update itself will be performed by the Earthquake View Model, which
+        // will communicate through the parent Activity.
+        mSwipeToRefreshView.setRefreshing(false);
     }
+
+    public interface OnListFragmentInteractionListener{
+        void onListFragmentRefreshRequested();
+    }
+
+    private OnListFragmentInteractionListener mListener;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mListener = (OnListFragmentInteractionListener) context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    protected void updateEarthquakes(){
+        if(mListener !=null){
+            mListener.onListFragmentRefreshRequested();
+        }
+
+    }
+
+
 }

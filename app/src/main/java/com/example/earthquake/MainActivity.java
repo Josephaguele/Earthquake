@@ -14,7 +14,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+EarthquakeListFragment.OnListFragmentInteractionListener{
 
     private static final String TAG_LIST_FRAGMENT = "TAG_LIST_FRAGMENT";
 
@@ -53,5 +54,15 @@ public class MainActivity extends AppCompatActivity {
         dummyQuakes.add(new Earthquake("2", now, "Nepal", null, 6.0, null));
 
         mEarthquakeListFragment.setEarthquakes(dummyQuakes);*/
+    }
+
+    @Override
+    public void onListFragmentRefreshRequested() {
+        updateEarthquakes();
+    }
+
+    private void updateEarthquakes() {
+        // Request the View Model update the earthquakes from the USGS feed.
+        earthquakeViewModel.loadEarthquakes();
     }
 }
