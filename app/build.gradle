@@ -30,4 +30,7 @@ dependencies {
     // changed it in the fragment_earthquake_list.xml
 
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
+    // Adding Android Architectural components dependency : LiveData and ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:1.1.1"
 }
