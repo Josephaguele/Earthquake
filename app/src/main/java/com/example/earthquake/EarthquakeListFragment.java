@@ -12,11 +12,14 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class EarthquakeListFragment extends Fragment {
 
+    protected  EarthquakeViewModel earthquakeViewModel;
     private RecyclerView mRecyclerView;
     private ArrayList<Earthquake> mEarthquakes = new ArrayList<Earthquake>();
     private EarthquakeRecyclerViewAdapter mEarthquakeAdapter = new EarthquakeRecyclerViewAdapter(mEarthquakes);
@@ -44,6 +47,20 @@ public class EarthquakeListFragment extends Fragment {
         Context context = view.getContext();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.setAdapter(mEarthquakeAdapter);
+
+        // Retrieve the Earthquake View Model for the parent Activity.
+        earthquakeViewModel = ViewModelProviders.of(getActivity()).get(EarthquakeViewModel.class);
+
+        //Get teh data from the View Model, and observe any changes.
+        earthquakeViewModel.getEarthquakes().observe(this, new Observer<List<Earthquake>>() {
+            @Override
+            public void onChanged(List<Earthquake> earthquakes) {
+                // When the View Model changes update the list
+                if (earthquakes != null){
+                    setEarthquakes(earthquakes);
+                }
+            }
+        });
     }
 
 

@@ -33,4 +33,5 @@ dependencies {
 
     // Adding Android Architectural components dependency : LiveData and ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel:1.1.1"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 }
