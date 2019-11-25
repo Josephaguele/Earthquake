@@ -6,7 +6,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -14,14 +17,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements
+public class EarthquakeMainActivity extends AppCompatActivity implements
 EarthquakeListFragment.OnListFragmentInteractionListener{
 
     private static final String TAG_LIST_FRAGMENT = "TAG_LIST_FRAGMENT";
+    private static final int MENU_PREFERENCES = Menu.FIRST+1;
 
     EarthquakeListFragment mEarthquakeListFragment;
 
-    // Calling viewModel in MainActivity
+    // Calling viewModel in EarthquakeMainActivity
     EarthquakeViewModel earthquakeViewModel;
 
     @Override
@@ -46,14 +50,6 @@ EarthquakeListFragment.OnListFragmentInteractionListener{
 
         // Retrieve the Earthquake View Model for this Activity.
         earthquakeViewModel = ViewModelProviders.of(this).get(EarthquakeViewModel.class);
-
-   /*     Date now = Calendar.getInstance().getTime();
-        List<Earthquake> dummyQuakes = new ArrayList<Earthquake>(0);
-        dummyQuakes.add(new Earthquake("0", now, "San Jose", null, 7.3, null));
-        dummyQuakes.add(new Earthquake("1", now, "LA", null, 6.5, null));
-        dummyQuakes.add(new Earthquake("2", now, "Nepal", null, 6.0, null));
-
-        mEarthquakeListFragment.setEarthquakes(dummyQuakes);*/
     }
 
     @Override
@@ -64,5 +60,29 @@ EarthquakeListFragment.OnListFragmentInteractionListener{
     private void updateEarthquakes() {
         // Request the View Model update the earthquakes from the USGS feed.
         earthquakeViewModel.loadEarthquakes();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+         super.onCreateOptionsMenu(menu);
+        menu.add(0,MENU_PREFERENCES,Menu.NONE,R.string.menu_settings);
+        return true;
+    }
+
+    /*This is to display the PreferencesActivity when the new Menu Item from onCreateOptionsMenu is
+    * selected. To launch the Preferences Activity, create an explicit intent, and pass it in to the
+    * startActivityForResult method. This will launch the Activity and alert the EarthquakeMainActivity
+    * class when the Preferences Activity is finished via the onActivityResult handler.*/
+    private static final int SHOW_PREFERENCES = 1;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+         super.onOptionsItemSelected(item);
+        switch(item.getItemId()){
+            case MENU_PREFERENCES:
+                Intent intent = new Intent(this, PreferencesActivity.class);
+                startActivityForResult(intent, SHOW_PREFERENCES);
+                return true;
+        }
+        return false;
     }
 }
